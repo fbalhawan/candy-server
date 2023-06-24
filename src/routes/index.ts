@@ -4,6 +4,6 @@ import { auth } from '../middlewares/auth';
 
 const router = Router();
 
-router.use('/devices', auth, device);
+router.use('/device', auth, device);
 
 export default router;
