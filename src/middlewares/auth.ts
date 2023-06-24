@@ -1,6 +1,4 @@
 import { Request, Response, NextFunction} from 'express';
-// import dotenv from 'dotenv';
-// dotenv.config();
 
 export function auth(req: Request, res: Response, next: NextFunction) {
     const adminToken = process.env.BASIC_ADMIN_TOKEN;
