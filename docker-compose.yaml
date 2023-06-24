@@ -1,17 +1,35 @@
 version: '3'
+
+networks:
+  local-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.60.0.0/16
+
 services:
 
   app:
+    restart: always
     build:
       context: .
     ports:
       - '3001:3000'
     volumes:
       - .:/app
-      - /app/node_modules
+      - /node_modules
     environment:
       NODE_ENV: development
-    command: node ./dist/server.js
+      DB_TYPE: mongo
+      DB_HOST: mongodb://10.60.0.20
+      DB_PORT: 27017
+      DB_NAME: candy_db
+      BASIC_ADMIN_TOKEN: "uM4kWQqF1F4r5Jszkq%bqfe"
+      MORGAN_LOG: dev
+    command: npm run dev
+    networks:
+      local-net:
+        ipv4_address: 10.60.0.10
     depends_on:
       - db
 
@@ -21,6 +39,9 @@ services:
       - '27017:27017'
     volumes:
       - mongodb_data:/data/db
+    networks:
+      local-net:
+        ipv4_address: 10.60.0.20
 
 volumes:
   mongodb_data:
