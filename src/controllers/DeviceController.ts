@@ -2,12 +2,14 @@ import { Request, Response } from 'express';
 import Device from '../models/Device';
 import { randomUUID } from 'crypto';
 
-const getDevice = (req: Request, res: Response) => {
-    const id = req.params.id;
-    res.json({
-        device: "device"
-    })
+const getDevices = async (req: Request, res: Response) => {
+    const {pageNumber, pageSize, filters = {} } = req.body;
+    
+    const devices = await Device.searchDevices(filters, pageNumber, pageSize);
+
+    res.json(devices);
 }
+
 
 const postDevice = async (req: Request, res: Response) => {
     const errors = [];
@@ -24,6 +26,7 @@ const postDevice = async (req: Request, res: Response) => {
     });
 
     try {
+        console.log("try to save device: ",device);
         const savedDevice = await device.save();
         console.log("savedDevice: ",savedDevice);
         res.status(200).json(savedDevice);
@@ -38,4 +41,4 @@ const postDevice = async (req: Request, res: Response) => {
 }
 
 
-export { getDevice, postDevice };
+export { postDevice, getDevices };

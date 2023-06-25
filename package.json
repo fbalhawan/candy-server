@@ -6,10 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "clean": "rimraf ./dist/*.js",
-    "dev": "nodemon --watch 'src/**/*.ts' --exitcrash --exec 'ts-node' src/server.ts",
-    "docker": "docker build \"$(pwd)\" -t candy-server",
-    "dockerrun": "docker run -p 3000:3000 --name candy-server candy-server"
+    "clean": "docker compose down",
+    "dev": "tsc && nodemon --watch 'src/**/*.ts' --exitcrash --exec 'ts-node' src/server.ts"
   },
   "author": "Fouad B.",
   "license": "ISC",

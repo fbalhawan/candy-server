@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, Model } from 'mongoose';
 
 interface IDevice extends Document {
   deviceId: string;
@@ -12,4 +12,8 @@ interface IDevice extends Document {
   }>;
 }
 
-export default IDevice;
+interface IDeviceModel extends Model<IDevice>{
+  searchDevices: (filters: any, pageNumber: number, pageSize: number) => Promise<IDevice[]>;
+}
+
+export {IDevice, IDeviceModel};

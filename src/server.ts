@@ -1,10 +1,9 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import  routes  from './routes';
-// import { connectDb } from './db';
-import MongoClient from './modules/mongo';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
+import mongoose from 'mongoose';
 
 dotenv.config();
 
@@ -21,14 +20,25 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(morgan(MORGAN_LOG));
+
 app.use(bodyParser.urlencoded({
     extended: true
   }));
-app.use('/api', routes);
+  
 
-app.use(morgan(MORGAN_LOG));
+  app.use('/api', routes);
 
-const client = MongoClient.getInstance(`${DB_HOST}:${DB_PORT}/${DB_NAME}`);
-client.connect().then(() => console.log('Connected to DB')).catch((error) => console.error(error));
+// Form the connection URL
+const dbUrl = `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`;
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+// Connect to MongoDB using Mongoose
+mongoose.connect(dbUrl)
+  .then(() => {
+    console.log('Connected to MongoDB');
+    app.listen(port, () => console.log(`Server running on port ${port}`));
+  })
+  .catch((err) => {
+    console.log('Failed to connect to MongoDB', err);
+  });
+  
